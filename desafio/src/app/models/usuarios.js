@@ -17,6 +17,4 @@ class Usuarios extends Model{
         );
     }
 }
-
-//
 export default Usuarios;
