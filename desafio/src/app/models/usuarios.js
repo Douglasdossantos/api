@@ -2,7 +2,8 @@ import Sequelize, { Model } from 'sequelize';
 import bcrypt from 'bcryptjs';
 
 class Usuarios extends Model{
-    static init(sequelize){
+    static init(sequelize)
+    {
         super.init(
             {
                 nome: Sequelize.STRING,
@@ -15,12 +16,16 @@ class Usuarios extends Model{
                 sequelize,
             }
         );
+
         this.addHook('beforeSave', async Usuarios => {
             if (Usuarios.password) {
                 Usuarios.password_hash  = await bcrypt.hash(Usuarios.password, 8);                
             }
         });
         return this;
+    }
+    checkPassword(password){
+        return bcrypt.compare(password, this.password_hash);
     }
 }
 export default Usuarios;
