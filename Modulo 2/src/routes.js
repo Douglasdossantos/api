@@ -1,20 +1,20 @@
 import { Router } from 'express';
-import User from './app/model/User';
+import UserController from  './app/controlers/UserController';
+import SessionController from './app/controlers/SessionControlle';
+import authMiddleware from './app/middlewares/auth';
+import multer from 'multer';
+import multerConfig from './config/multer';
+import fileController from './app/controlers/fileController';
 
 const routes = new Router();
+const upload = multer(multerConfig);
 
-routes.get('/', async (req, res) => {
-  try {
-    const  user = await User.create({
-      nome: 'Douglas',
-      email:'douglas@testeemail',
-      password_hash: '1234567890',
-      provider: 0
-    });
-    return res.json(user);
-  } catch (error) {
-    res.status(400).send(error.message)
-    console.log(error)
-  }
-});
+routes.post('/users', UserController.store);
+routes.post('/sessions', SessionController.store);
+
+routes.use(authMiddleware);
+routes.put('/users', authMiddleware, UserController.update);
+
+routes.post('/files', upload.single('file'), fileController.store);
+
 export default routes;
