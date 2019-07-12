@@ -171,6 +171,11 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
+asap@~2.0.3:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
+  integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
+
 assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -2308,6 +2313,13 @@ node-pre-gyp@^0.12.0:
     semver "^5.3.0"
     tar "^4"
 
+nodegit-promise@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/nodegit-promise/-/nodegit-promise-4.0.0.tgz#5722b184f2df7327161064a791d2e842c9167b34"
+  integrity sha1-VyKxhPLfcycWEGSnkdLoQskWezQ=
+  dependencies:
+    asap "~2.0.3"
+
 nodemon@^1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.1.tgz#576f0aad0f863aabf8c48517f6192ff987cd5071"
@@ -2798,6 +2810,14 @@ progress@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
+
+promisify-node@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/promisify-node/-/promisify-node-0.5.0.tgz#b7115a9d5cd241e939c96e260acda24938d25720"
+  integrity sha512-GR2E4qgCoKFTprhULqP2OP3bl8kHo16XtnqtkHH6be7tPW1yL6rXd15nl3oV2sLTFv1+j6tqoF69VVpFtJ/j+A==
+  dependencies:
+    nodegit-promise "^4.0.0"
+    object-assign "^4.1.1"
 
 prop-types@^15.7.2:
   version "15.7.2"
