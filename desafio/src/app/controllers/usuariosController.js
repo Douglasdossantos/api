@@ -1,9 +1,18 @@
+import * as Yup from 'yup';
 import User from '../models/usuarios';
-import { async } from '../../../../../../AppData/Local/Microsoft/TypeScript/3.5/node_modules/rxjs/internal/scheduler/async';
 import { updateLocale } from 'moment';
 
 class UsuarioController {
     async store(req, res){
+        const schema = Yup.object().shape({
+            nome: Yup.string().required(),
+            email: Yup.string().email().required(),
+            password: Yup.string().required().min(6),
+        });
+        if(!( await schema.isValid(req.body))){
+            return res.status(400).json({error: 'Não validado'})
+        }
+
         const usuarioExistente = await User.findOne({ where: { email: req.body.email } });
         
         if (usuarioExistente) {
@@ -15,6 +24,20 @@ class UsuarioController {
     }
     async update(req, res){
         const {email, oldPassword } = req.body;
+        const schema = Yup.object().shape({
+            nome: Yup.string(),
+            email: Yup.string().email(),
+            oldPassword: Yup.string().min(6),
+            password: Yup.string().min(6).when('oldPassword', (oldPassword, field) => 
+            oldPassword ? field.required() : field
+            ),
+            confirmePassword : Yup.string().when('password', (password, field) => 
+            oldPassword ? field.required().oneOf([Yup.ref('password')]) : field
+            ),
+        });
+        if(!( await schema.isValid(req.body))){
+            return res.status(400).json({error: 'Não validado'})
+        }
 
         const user = await User.findByPk(req.userId);
 
@@ -29,7 +52,6 @@ class UsuarioController {
             return res.status(401).json({error: 'senha não coresponde'});
         }
         const {id, nome, provider} = await user.update(req.body);
-        console.log(id, nome, provider);
         return res.json({
             id,
             nome,

@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import Jwt from 'jsonwebtoken';
 import User from '../models/usuarios';
 import authConfig from '../../config/auth';
@@ -5,6 +6,15 @@ import authConfig from '../../config/auth';
 
 class SessionController {
     async store(req, res){
+
+        const schema = Yup.object().shape({            
+            email: Yup.string().required().email(),            
+            password: Yup.string().min(6).required(),
+        });
+        if(!( await schema.isValid(req.body))){
+            return res.status(400).json({error: 'Não validado'})
+        }
+
         const { email,  password } = req.body;
         const user = await User.findOne({ where: { email }});
         if(!user){
