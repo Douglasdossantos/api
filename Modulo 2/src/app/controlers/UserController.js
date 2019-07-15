@@ -30,15 +30,17 @@ class UserController {
   async update(req, res){
     const schema = Yup.object().shape({
       nome : Yup.string().required(),
-      email: Yup.string().email().required(),
+      email: Yup.string().required().email(),
       oldPassword: Yup.string().required().min(6),
-      Password: Yup.string().min(6).when('oldPassword', (oldPassword, field) =>
+      password: Yup.string().min(6).when('oldPassword', (oldPassword, field) =>
          oldPassword ? field.required() : field
         ),
     });
     const userExists = await User.findOne({ where: { email: req.body.email } });
-    if(userExists){
-      return res.status(400).json({error: 'Preencha os campos minimos.'});
+    console.log(userExists);
+
+    if(!userExists){
+      return res.status(400).json( {error: 'Preencha os campos minimos.'} );
     }
 
     const {email, oldPassword} = req.body;
@@ -56,13 +58,11 @@ class UserController {
       return res.status(401).json({error: 'password does not math'});
     }
 
-    const {id, nome, provider} = await user.update(req.body);
+    const u = await user.update(req.body);
 
-     return res.json({
-      id,
-      nome,
-      email,
-      provider,
+
+    return res.json({
+      u
     });
   }
 }
