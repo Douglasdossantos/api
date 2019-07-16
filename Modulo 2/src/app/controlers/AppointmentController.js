@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { starOffhour, parseISO, isBefore, startOfHour, format } from 'date-fns';
+import { starOffhour, parseISO, isBefore, startOfHour, format, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import Appointments from '../model/appointments';
 import User from '../model/User';
@@ -91,6 +91,28 @@ class AppointmentsController {
     );
 
     return res.json(appointment);
+  }
+  async delete(req, res){
+    const appointments = await Appointments.findByPk(req.params.id);
+
+    console.log(req.userId);
+    console.log(appointments.user_id);
+
+    if (appointments.user_id != req.userId) {
+      return res.status(401).json({error: 'usuario não pode excluir'})
+    }
+
+    const dateWithSub = subHours(appointments.date, 2);
+
+    if(isBefore(dateWithSub, new Date())){
+      return res.status(401).json({ error: 'vc não pode  deletar antes de 2 horas de atencedencia'});
+    }
+
+    appointments.canceled_at = new Date();
+
+    await appointments.save();
+
+    return res.json(appointments);
   }
 }
 export default new AppointmentsController();
