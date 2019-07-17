@@ -21,8 +21,7 @@ class Database{
   }
 
   mongo() {
-    this.mongoConnection = mongoose.connect(
-      'mongodb+srv://SA:1267@cluster0-dmuxr.mongodb.net/test',
+    this.mongoConnection = mongoose.connect(process.env.MONGO_URL,
       { useNewUrlParser: true, useFindAndModify:true }
     );
   }
