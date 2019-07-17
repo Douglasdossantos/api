@@ -7,6 +7,7 @@ import File from '../model/file';
 import { start } from 'repl';
 import Notification from '../schemas/Notification';
 import Queue from '../../lib/Queue';
+import Mail from '../../lib/Mail';
 import CancellationMail from '../jobs/CancellationMail';
 
 
@@ -97,7 +98,7 @@ class AppointmentsController {
   }
 
   async delete(req, res){
-    const appointments = await Appointments.findByPk(req.params.id, {
+    const appointment = await Appointments.findByPk(req.params.id, {
       include:[
         {
           model: User,
@@ -112,29 +113,26 @@ class AppointmentsController {
       ],
     });
 
-
-    console.log(req.userId);
-    console.log(appointments.user_id);
-
-    if (appointments.user_id != req.userId) {
+    if (appointment.user_id != req.userId) {
       return res.status(401).json({error: 'usuario não pode excluir'})
     }
 
-    const dateWithSub = subHours(appointments.date, 2);
+    const dateWithSub = subHours(appointment.date, 2);
 
     if(isBefore(dateWithSub, new Date())){
       return res.status(401).json({ error: 'vc não pode  deletar antes de 2 horas de atencedencia'});
     }
 
-    appointments.canceled_at = new Date();
+    appointment.canceled_at = new Date();
 
-    await appointments.save();
+    await appointment.save();
 
-    await Queue.add(CancellationMail.Key, {
-       appointment,
-      });
+    await Queue.add(CancellationMail.key, {
+      appointment,
+    });
 
-    return res.json(appointments);
+
+    return res.json(appointment);
   }
 }
 export default new AppointmentsController();

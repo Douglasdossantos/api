@@ -1,28 +1,27 @@
 import { format, parseISO } from 'date-fns';
-import Mail from '../../lib/Mail';
 import pt from 'date-fns/locale/pt';
+import Mail from '../../lib/Mail';
 
 class CancellationMail{
-  get Key(){
+  get key(){
     return 'CancellationMail';
   }
   async handle({ data }){
-    const { appointments} = data;
+    const { appointment} = data;
 
-    console.log('a fila executou');
+
     Mail.sendMail({
-      to:`${appointments.provider.nome} < ${appointments.provider.email}>`,
+      to:`${appointment.provider.nome} < ${appointment.provider.email}>`,
       subject: 'Agendamento cancelado',
       template: 'cancellation',
       context:{
-        provider:appointments.provider.nome,
-        user: appointments.user.nome,
-        date: format(appointments.date, "'dia' dd 'de' MMMM', às' H:mm'h'", {
+        provider:appointment.provider.nome,
+        user: appointment.user.nome,
+        date: format(parseISO(appointment.date), "'dia' dd 'de' MMMM', às' H:mm'h'", {
           locale: pt,
         }),
       },
     });
   }
-
 }
 export default new CancellationMail();
