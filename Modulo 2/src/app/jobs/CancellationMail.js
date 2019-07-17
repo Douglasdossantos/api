@@ -8,6 +8,7 @@ class CancellationMail{
   }
   async handle({ data }){
     const { appointments} = data;
+
     console.log('a fila executou');
     Mail.sendMail({
       to:`${appointments.provider.nome} < ${appointments.provider.email}>`,
