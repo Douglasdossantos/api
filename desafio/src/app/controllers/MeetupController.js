@@ -20,18 +20,12 @@ class MeetupController {
         if (!(await schema.isValid(req.body))) {
             return res.status(400).json({error: 'requisição invalida'})            
         }
-        
-        console.log(data_hora);
 
         const  hourStart = startOfHour(parseISO(data_hora));
-
 
         if(isBefore(hourStart, new Date())){
             return res.status(400).json({error: 'data permitida ja foi utrapassada'})
         }
-        
-
-        console.log(req.body)
 
         const meetup = await Meetup.create(req.body);          
         return res.json(meetup);
